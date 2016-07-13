@@ -139,7 +139,15 @@ public class MockSignalService implements SignalService {
 		    Collections.sort(list, new Comparator<Signal>() {
 		        @Override
 		        public int compare(Signal o1, Signal o2) {
-		            return (int) (o1.getDate().getTime() - o2.getDate().getTime());
+		        	long o1time = o1.getDate().getTime();
+		        	long o2time = o2.getDate().getTime();
+		        	if (o1time == o2time) {
+		        		return 0;
+		        	} else if (o1time > o2time) {
+		        		return 1;
+		        	} else {
+		        		return -1;
+		        	}
 		        }
 		    });        
     	} catch (Exception e) {

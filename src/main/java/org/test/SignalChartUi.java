@@ -43,7 +43,7 @@ public class SignalChartUi {
     	}
         ArrayList<Series> series = new ArrayList<>();
         if (showTotal) {
-	        DataSeries dataSeries = new DataSeries();
+	        DataSeries dataSeries = new DataSeries("Total");
 	        for(Signal signal : signals) {
 	            DataSeriesItem item = new DataSeriesItem();
 	            LOGGER.finer("Add Chart point: " + signal.getDate().toString() + ", " + signal.getTotal());
@@ -54,7 +54,7 @@ public class SignalChartUi {
 	        series.add(dataSeries);
         } else {
             for (State state : states) {
-    	        DataSeries dataSeries = new DataSeries();
+    	        DataSeries dataSeries = new DataSeries(state.getName());
     	        for(Signal signal : signals) {
     	            DataSeriesItem item = new DataSeriesItem();
     	            LOGGER.finer("Add Chart point: " + signal.getDate().toString() + ", " + signal.getCount(state.getName()));
@@ -71,12 +71,14 @@ public class SignalChartUi {
 
     public Chart createChart(List<State> states, List<Signal> signals, boolean showTotal) {
         chart = new Chart(ChartType.COLUMN);
-        chart.setHeight("450px");
+        chart.setHeight("650px");
         chart.setWidth("100%");
         chart.setTimeline(true);
 
         Configuration configuration = chart.getConfiguration();
         configuration.getTitle().setText("Asset States");
+        
+        configuration.getLegend();
 
         RangeSelector rangeSelector = new RangeSelector();
         RangeSelectorButton[] buttons = new RangeSelectorButton[4];

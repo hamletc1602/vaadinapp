@@ -12,19 +12,21 @@ import org.test.model.LoadData;
 import org.test.model.MockAssetService;
 import org.test.model.MockSignalService;
 import org.test.model.MockStateService;
+import org.test.model.Signal;
 import org.test.model.SignalService;
 import org.test.model.SignalServiceImpl;
 import org.test.model.State;
 import org.test.model.StateService;
 
-import com.vaadin.addon.charts.Chart;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
+import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
@@ -59,6 +61,7 @@ public class MyUI extends UI {
 	private String assetName;
 	private boolean showTotal;
 	private SignalChartUi signalChart;
+	private SignalTableUi signalTable;
 	boolean initComplete;
 	
     @Override
@@ -109,19 +112,27 @@ public class MyUI extends UI {
 
     	// Start UI
     	final HorizontalLayout layout = new HorizontalLayout();
-        
-		// Grouped chart view
-        signalChart = new SignalChartUi(this);
-        signalChart.createChart(
-        	stateService.findAll(), 
-        	signalService.findAll(assetName, SignalService.GroupBy.DAY), 
-        	assetName.equals("_TOTAL_"));
+    	layout.setWidth("100%");
 
+    	{
+	    	List<State> states = stateService.findAll();
+	    	List<Signal> signals = signalService.findAll(assetName, group);
+	    	
+			// Chart view
+	        signalChart = new SignalChartUi(this);
+	        signalChart.createChart(states, signals, showTotal);
+	        
+	        // Table View
+	        signalTable = new SignalTableUi(this);
+	        signalTable.createTable(states, signals);
+    	}
+    	
         // Asset List combo Box
-        ListSelect assetSelect = new ListSelect();
-        assetSelect.setRows(5);
+        ListSelect assetSelect = new ListSelect("Assets");
         assetSelect.setNullSelectionAllowed(false);
         assetSelect.setMultiSelect(false);
+        assetSelect.setHeight("100%");
+        //assetSelect.setWidth("20%");
         assetSelect.addItem(new ListItem("_TOTAL_", "All"));
         for (Asset asset : assetService.findAll()) {
         	assetSelect.addItems(new ListItem(asset.getName(), asset.getName()));
@@ -133,42 +144,54 @@ public class MyUI extends UI {
 	        	showTotal = "_TOTAL_".equals(assetName);
 	        	LOGGER.info("New Asset selected: " + assetName);
 	        	List<State> states = stateService.findAll();
-	        	signalChart.setData(states, 
-	            	signalService.findAll(assetName, group), showTotal);
+	        	List<Signal> signals = signalService.findAll(assetName, group);
+	        	signalChart.setData(states, signals, showTotal);
+	        	signalTable.setData(states, signals);
         	}
         });
         
         //
         Button dayGroup = new Button("Day");
+        dayGroup.setHeight("25px");
         dayGroup.addClickListener( e -> {
         	LOGGER.info("Day grouping selected");
     		group = SignalService.GroupBy.DAY;
         	List<State> states = stateService.findAll();
-        	signalChart.setData(states, signalService.findAll(assetName, group), showTotal);
+        	List<Signal> signals = signalService.findAll(assetName, group);
+        	signalChart.setData(states, signals, showTotal);
+        	signalTable.setData(states, signals);
         });
         Button monthGroup = new Button("Month");
+        monthGroup.setHeight("25px");
         monthGroup.addClickListener( e -> {
         	LOGGER.info("Month grouping selected");
     		group = SignalService.GroupBy.MONTH;
         	List<State> states = stateService.findAll();
-        	signalChart.setData(states, signalService.findAll(assetName, group), showTotal);
+        	List<Signal> signals = signalService.findAll(assetName, group);
+        	signalChart.setData(states, signals, showTotal);
+        	signalTable.setData(states, signals);
         });
         Button yearGroup = new Button("Year");
+        yearGroup.setHeight("25px");
         yearGroup.addClickListener( e -> {
         	LOGGER.info("Year grouping selected");
     		group = SignalService.GroupBy.YEAR;
         	List<State> states = stateService.findAll();
-        	signalChart.setData(states, signalService.findAll(assetName, group), showTotal);
+        	List<Signal> signals = signalService.findAll(assetName, group);
+        	signalChart.setData(states, signals, showTotal);
+        	signalTable.setData(states, signals);
         });
         HorizontalLayout groupBtns = new HorizontalLayout();
-        groupBtns.addComponents(dayGroup, monthGroup, yearGroup);
+        groupBtns.setSpacing(true);
+        groupBtns.addComponents(new Label("Group by: "), dayGroup, monthGroup, yearGroup);
         
         VerticalLayout centerPanel = new VerticalLayout();
-        centerPanel.addComponents(groupBtns, signalChart.getChart());
+        centerPanel.setWidth("100%");
+        centerPanel.setMargin(new MarginInfo(false, true, false, true));
+        centerPanel.addComponents(groupBtns, signalChart.getChart(), signalTable.getTable());
         
         layout.addComponents(assetSelect, centerPanel);
-        layout.setMargin(true);
-        layout.setSpacing(true);
+        layout.setExpandRatio(centerPanel, 1);
         
         setContent(layout);
         initComplete = true;
