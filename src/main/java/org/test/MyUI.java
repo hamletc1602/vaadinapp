@@ -5,6 +5,18 @@ import java.util.logging.Logger;
 
 import javax.servlet.annotation.WebServlet;
 
+import org.test.model.Asset;
+import org.test.model.AssetService;
+import org.test.model.AssetServiceImpl;
+import org.test.model.LoadData;
+import org.test.model.MockAssetService;
+import org.test.model.MockSignalService;
+import org.test.model.MockStateService;
+import org.test.model.SignalService;
+import org.test.model.SignalServiceImpl;
+import org.test.model.State;
+import org.test.model.StateService;
+
 import com.vaadin.addon.charts.Chart;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;

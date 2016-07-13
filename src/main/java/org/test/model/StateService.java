@@ -1,4 +1,4 @@
-package org.test;
+package org.test.model;
 
 import java.util.List;
 

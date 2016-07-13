@@ -1,4 +1,4 @@
-package org.test;
+package org.test.model;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

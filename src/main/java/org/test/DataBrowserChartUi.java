@@ -4,6 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.test.model.MockSignalService;
+import org.test.model.Signal;
+import org.test.model.SignalService;
+import org.test.model.State;
+
 import com.vaadin.addon.charts.Chart;
 import com.vaadin.addon.charts.model.ChartType;
 import com.vaadin.addon.charts.model.Configuration;

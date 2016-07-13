@@ -1,4 +1,4 @@
-package org.test;
+package org.test.model;
 
 import java.io.BufferedReader;
 import java.io.IOException;
