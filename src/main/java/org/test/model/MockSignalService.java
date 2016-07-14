@@ -59,7 +59,7 @@ public class MockSignalService implements SignalService {
 	 * @see org.test.SignalService#findAll()
 	 */
     public synchronized List<Signal> findAll() {
-        return findAll("_TOTAL_", GroupBy.DAY);
+        return findAll(LoadData.ALL_ASSETS, GroupBy.DAY);
     }
 
     /* (non-Javadoc)
@@ -70,7 +70,7 @@ public class MockSignalService implements SignalService {
     	try {
 		    // If an asset name filter is not provided, return totals.
 			if (assetName == null || assetName.isEmpty()) {
-		    	assetName = "_TOTAL_";
+		    	assetName = LoadData.ALL_ASSETS;
 		    }
 		    
 		    if (GroupBy.YEAR == groupBy) {

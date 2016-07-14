@@ -25,11 +25,8 @@ import org.apache.commons.csv.CSVRecord;
 
 
 /**
- * An in memory dummy "database" for the example purposes. In a typical Java app
- * this class would be replaced by e.g. EJB or a Spring based service class.
- * <p>
- * In demos/tutorials/examples, get a reference to this service class with
- * {@link MockSignalService#getInstance()}.
+ 	A util class for data/model related code.
+ 	(Currently a mix of prod. and mock functionality)
  */
 public class LoadData {
     private static final Logger LOGGER = Logger.getLogger(LoadData.class.getName());
@@ -37,13 +34,26 @@ public class LoadData {
     private static String dbport;
     private static String dbuser;
     private static String dbpw;
+    
+    public static final String ALL_ASSETS = "_TOTAL_";
 
+    /** Load config from either Java properties or Env. vars 
+    	(Java props will overrride Env.)
+    */
+    private static String getConfigProperty(String name) {
+    	String value = System.getProperty(name);
+    	if (null == value) {
+    		value = System.getenv(name);
+    	}
+    	return value;
+    }
+    
     static {
-    	// Load databas settings from Amazon Env. vars:
-    	dbhost = System.getenv("RDS_HOSTNAME");
-    	dbport = System.getenv("RDS_PORT");
-    	dbuser = System.getenv("RDS_USERNAME");
-    	dbpw = System.getenv("RDS_PASSWORD");
+    	// Load database settings from ENV or Java properties
+    	dbhost = getConfigProperty("RDS_HOSTNAME");
+    	dbport = getConfigProperty("RDS_PORT");
+    	dbuser = getConfigProperty("RDS_USERNAME");
+    	dbpw = getConfigProperty("RDS_PASSWORD");
     	
     	try {
     		Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
@@ -66,6 +76,19 @@ public class LoadData {
     	return "jdbc:mysql://" + dbhost + ":" + dbport + "/aimsio?user=" + 
     		dbuser + "&password=" + dbpw;
     }
+    
+    
+    
+    /**************************************************************************
+    
+    Code below this point was used to support initial mock data
+    generation. It is presently non-functional since the "query_result.csv"
+    source data has been removed from the source.
+    
+    It should be re-purposed to load smaller CSV files with mock data for 
+    stand alone unit testing.
+    
+    **************************************************************************/
     
     /** */
     public List<Asset> getAssets() {

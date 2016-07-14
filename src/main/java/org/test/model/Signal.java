@@ -51,15 +51,6 @@ public class Signal implements Serializable, Cloneable {
 		counts.put(state, getCount(state) + count);
     }
 
-    /*
-    public void addToCount(Signal other) {
-    	for (String state : counts.keySet()) {
-    		addToCount(state, other.getCount(state));
-    	}
-    	total = total + other.total;
-    }
-    */
-
     public int getTotal() {
 		return total;
 	}
@@ -67,6 +58,17 @@ public class Signal implements Serializable, Cloneable {
 	public void setTotal(int total) {
 		this.total = total;
 	}
+
+	/* Assertion for testing - Check that the individual state counts match the total. */
+    public void checkTotal() {
+    	int checkTotal = 0;
+    	for (int count : counts.values()) {
+    		checkTotal += count;
+    	}
+    	if (checkTotal != total) {
+    		throw new RuntimeException("Sub-counts for Signal " + this.toString() + " do not match total.");
+    	}
+    }
 
     public boolean isPersisted() {
         return id != null;

@@ -11,46 +11,46 @@ import java.util.logging.Logger;
 
 /**
  */
-public class AssetServiceImpl implements AssetService {
+public class StateServiceImpl implements StateService {
 
-    private static AssetServiceImpl instance;
-    private static final Logger LOGGER = Logger.getLogger(AssetServiceImpl.class.getName());
+    private static StateServiceImpl instance;
+    private static final Logger LOGGER = Logger.getLogger(StateServiceImpl.class.getName());
 
-    private AssetServiceImpl() {
+    private StateServiceImpl() {
     }
 
     /**
-     * @return a reference to an example facade for Asset objects.
+     * @return a reference to an example facade for State objects.
      */
-    public static AssetServiceImpl getInstance() {
+    public static StateServiceImpl getInstance() {
         if (instance == null) {
-            instance = new AssetServiceImpl();
+            instance = new StateServiceImpl();
         }
         return instance;
     }
     
     /* (non-Javadoc)
-	 * @see org.test.AssetService#findAll()
+	 * @see org.test.StateService#findAll()
 	 */
-    public synchronized List<Asset> findAll() {
+    public synchronized List<State> findAll() {
         return findAll(null);
     }
 
     /* (non-Javadoc)
-	 * @see org.test.AssetService#findAll(java.lang.String)
+	 * @see org.test.StateService#findAll(java.lang.String)
 	 */
-    public synchronized List<Asset> findAll(String assetName) {
-        ArrayList<Asset> list = new ArrayList<>();
+    public synchronized List<State> findAll(String stateName) {
+        ArrayList<State> list = new ArrayList<>();
 	    Connection conn = null;
         try {
     	    conn = DriverManager.getConnection(LoadData.getJdbcConnectionString());
-    	    PreparedStatement assets = conn.prepareStatement("select id, name from asset order by name");
-        	ResultSet result = assets.executeQuery();
+    	    PreparedStatement states = conn.prepareStatement("select id, name from state order by name");
+        	ResultSet result = states.executeQuery();
         	while (result.next()) {
-        		Asset asset = new Asset();
-        		asset.setId(result.getInt(1));
-        		asset.setName(result.getString(2));
-        		list.add(asset);
+        		State state = new State();
+        		state.setId(result.getInt(1));
+        		state.setName(result.getString(2));
+        		list.add(state);
         	}
         } catch (SQLException e) {
         	try { conn.close(); } catch (SQLException e1) { /*Ignore*/ }
@@ -62,10 +62,10 @@ public class AssetServiceImpl implements AssetService {
     }
 
     /* (non-Javadoc)
-	 * @see org.test.AssetService#findAll(java.lang.String, int, int)
+	 * @see org.test.StateService#findAll(java.lang.String, int, int)
 	 */
-    public synchronized List<Asset> findAll(String stringFilter, int start, int maxresults) {
-        List<Asset> arrayList = findAll(stringFilter);
+    public synchronized List<State> findAll(String stringFilter, int start, int maxresults) {
+        List<State> arrayList = findAll(stringFilter);
         int end = start + maxresults;
         if (end > arrayList.size()) {
             end = arrayList.size();
@@ -74,23 +74,23 @@ public class AssetServiceImpl implements AssetService {
     }
 
     /* (non-Javadoc)
-	 * @see org.test.AssetService#count()
+	 * @see org.test.StateService#count()
 	 */
     public synchronized long count() {
         throw new RuntimeException("Not Implemented");
     }
 
     /* (non-Javadoc)
-	 * @see org.test.AssetService#delete(org.test.Asset)
+	 * @see org.test.StateService#delete(org.test.State)
 	 */
-    public synchronized void delete(Asset value) {
+    public synchronized void delete(State value) {
         throw new RuntimeException("Not Implemented");
     }
 
     /* (non-Javadoc)
-	 * @see org.test.AssetService#save(org.test.Asset)
+	 * @see org.test.StateService#save(org.test.State)
 	 */
-    public synchronized void save(Asset entry) {
+    public synchronized void save(State entry) {
         throw new RuntimeException("Not Implemented");
     }
  

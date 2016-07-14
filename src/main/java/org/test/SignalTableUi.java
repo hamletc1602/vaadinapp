@@ -1,35 +1,22 @@
 package org.test;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
-import org.test.model.MockSignalService;
 import org.test.model.Signal;
-import org.test.model.SignalService;
 import org.test.model.State;
 
-import com.vaadin.addon.charts.Chart;
-import com.vaadin.addon.charts.model.ChartType;
-import com.vaadin.addon.charts.model.Configuration;
-import com.vaadin.addon.charts.model.DataSeries;
-import com.vaadin.addon.charts.model.DataSeriesItem;
-import com.vaadin.addon.charts.model.RangeSelector;
-import com.vaadin.addon.charts.model.RangeSelectorButton;
-import com.vaadin.addon.charts.model.RangeSelectorTimespan;
-import com.vaadin.addon.charts.model.Series;
 import com.vaadin.ui.Table;
 
 public class SignalTableUi {
     private static final Logger LOGGER = Logger.getLogger(SignalTableUi.class.getName());
 
-    SignalService signalService = MockSignalService.getInstance();
-    private MyUI myUI;
+    private MyUI ui;
     private Table table;
 
     public SignalTableUi(MyUI myUI) {
-        this.myUI = myUI;
+        this.ui = myUI;
     }
     
     /** Return the existing chart. */

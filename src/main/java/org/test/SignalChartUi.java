@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import org.test.model.MockSignalService;
 import org.test.model.Signal;
-import org.test.model.SignalService;
 import org.test.model.State;
 
 import com.vaadin.addon.charts.Chart;
@@ -22,7 +20,6 @@ import com.vaadin.addon.charts.model.Series;
 public class SignalChartUi {
     private static final Logger LOGGER = Logger.getLogger(SignalChartUi.class.getName());
 
-    SignalService signalService = MockSignalService.getInstance();
     private MyUI myUI;
     private Chart chart;
 
@@ -36,42 +33,36 @@ public class SignalChartUi {
     }
     
     /** Add (or refresh) all data series to the chart. */
-    public void setData(List<State> states, List<Signal> signals, boolean showTotal) {
+    public void setData(List<State> states, List<Signal> signals) {
     	if (chart == null) {
     		LOGGER.warning("Signal chart setData invoked before chart created");
     		return;
     	}
         ArrayList<Series> series = new ArrayList<>();
-        if (showTotal) {
-	        DataSeries dataSeries = new DataSeries("Total");
+        for (State state : states) {
+	        DataSeries dataSeries = new DataSeries(state.getName());
 	        for(Signal signal : signals) {
 	            DataSeriesItem item = new DataSeriesItem();
-	            LOGGER.finer("Add Chart point: " + signal.getDate().toString() + ", " + signal.getTotal());
+	            LOGGER.finer("Add Chart point: " + signal.getDate().toString() + ", " + signal.getCount(state.getName()));
 	            item.setX(signal.getDate());
-	            item.setY(signal.getTotal());
+	            item.setY(signal.getCount(state.getName()));
 	            dataSeries.add(item);
 	        }
 	        series.add(dataSeries);
-        } else {
-            for (State state : states) {
-    	        DataSeries dataSeries = new DataSeries(state.getName());
-    	        for(Signal signal : signals) {
-    	            DataSeriesItem item = new DataSeriesItem();
-    	            LOGGER.finer("Add Chart point: " + signal.getDate().toString() + ", " + signal.getCount(state.getName()));
-    	            item.setX(signal.getDate());
-    	            item.setY(signal.getCount(state.getName()));
-    	            dataSeries.add(item);
-    	        }
-    	        series.add(dataSeries);
-            }
         }
         chart.getConfiguration().setSeries(series);
         chart.drawChart(chart.getConfiguration());
     }
 
-    public Chart createChart(List<State> states, List<Signal> signals, boolean showTotal) {
+    public Chart createChart(List<State> states, List<Signal> signals) {
         chart = new Chart(ChartType.COLUMN);
-        chart.setHeight("650px");
+        
+        if (myUI.getShowTable()) {
+	        chart.setHeight("650px");
+        } else {
+	        chart.setHeight("100%");
+	        chart.setSizeFull();
+        }
         chart.setWidth("100%");
         chart.setTimeline(true);
 
@@ -87,10 +78,10 @@ public class SignalChartUi {
         buttons[2] = new RangeSelectorButton(RangeSelectorTimespan.YEAR, 1, "1y");
         buttons[3] = new RangeSelectorButton(RangeSelectorTimespan.ALL, "All");
         rangeSelector.setButtons(buttons);
-        rangeSelector.setSelected(1);
+        rangeSelector.setSelected(3);
         configuration.setRangeSelector(rangeSelector);
 
-        setData(states, signals, showTotal);
+        setData(states, signals);
 
         return chart;
     }
