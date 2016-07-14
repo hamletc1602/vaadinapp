@@ -52,11 +52,12 @@ public class StateServiceImpl implements StateService {
         		state.setName(result.getString(2));
         		list.add(state);
         	}
+        	conn.close();
         } catch (SQLException e) {
-        	try { conn.close(); } catch (SQLException e1) { /*Ignore*/ }
     	    LOGGER.info("SQLException: " + e.getMessage());
     	    LOGGER.info("SQLState: " + e.getSQLState());
     	    LOGGER.info("VendorError: " + e.getErrorCode());
+        	try { if (conn != null) { conn.close(); } } catch (SQLException e1) { /*Ignore*/ }
         }
         return list;
     }

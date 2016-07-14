@@ -66,8 +66,8 @@ public class GroupButtonsUi {
         // Disable the selected button
         switch (group) {
 	        case DAY: dayGroup.setEnabled(false); break;
-	        case MONTH: dayGroup.setEnabled(false); break;
-	        case YEAR: dayGroup.setEnabled(false); break;
+	        case MONTH: monthGroup.setEnabled(false); break;
+	        case YEAR: yearGroup.setEnabled(false); break;
         }
         
         // Create panel

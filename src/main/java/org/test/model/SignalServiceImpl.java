@@ -101,7 +101,7 @@ public class SignalServiceImpl implements SignalService {
 		if ( ! LoadData.ALL_ASSETS.equals(assetName)) {
 			getSigCountSql += "where (AssetUN = ?) ";
 		}
-		getSigCountSql += "group by asset_status, " + groupSql + " order by entry_date;";	
+		getSigCountSql += "group by " + groupSql + " order by entry_date;";	
 		
 	    Connection conn = null;
         try {
@@ -127,11 +127,12 @@ public class SignalServiceImpl implements SignalService {
         		}
         		list.add(signal);
         	}
+        	conn.close();
         } catch (SQLException e) {
-        	try { conn.close(); } catch (SQLException e1) { /*Ignore*/ }
     	    LOGGER.info("SQLException: " + e.getMessage());
     	    LOGGER.info("SQLState: " + e.getSQLState());
     	    LOGGER.info("VendorError: " + e.getErrorCode());
+        	try { if (conn != null) { conn.close(); } } catch (SQLException e1) { /*Ignore*/ }
         }
         
         return list;

@@ -136,7 +136,7 @@ public class MyUI extends UI {
     	String groupStr = vaadinRequest.getParameter("groupBy");
     	if (groupStr != null) {
 	    	try {
-	    		group = SignalService.GroupBy.valueOf(groupStr);
+	    		group = SignalService.GroupBy.valueOf(groupStr.toUpperCase());
 	    	} catch (IllegalArgumentException e) {
 	    		LOGGER.warning("Invalid groupBy name provided. " + groupStr);
 	    	}
